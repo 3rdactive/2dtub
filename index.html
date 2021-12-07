@@ -46,20 +46,20 @@ else{
 
 
 
-
   if (data == null) {
       return;
   }
   var xprediction = data.x; //these x coordinates are relative to the viewport
   var yprediction = data.y; //these y coordinates are relative to the viewport
-  console.log("x = " +xprediction + " | y = " + localyeyes+yprediction);
+  //console.log("x = " +xprediction + " | y = " + localyeyes+yprediction);
   document.getElementById("eye").style.top=( Math.round( ( parseInt(localyeyes)+parseInt(yprediction)/10 )/smoothing )*smoothing ).toString()+"px";
   document.getElementById("eye").style.left=( Math.round( ( (parseInt(xprediction)-800)/10 )/smoothing )*smoothing ).toString()+"px";
   //document.getElementById("eye").style.top=yprediction.toString()+"px";
   //console.log("x = " +xprediction + " | y = " + yprediction); //elapsed time is based on time since begin was called
+  
 }).begin();
 
-
+setTimeout(async function(){var mod = webgazer.getTracker();console.log(mod);},4000)
 
 
 navigator.mediaDevices.getUserMedia({ audio: true, video: false })
