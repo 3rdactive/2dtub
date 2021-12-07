@@ -1,0 +1,12 @@
+2Dtub is compleatly free to use!
+you can use this in monetized projects videos or live streams.
+
+By using this you agree to:
+
+• you wont monetizing the program itself.
+• you will credit 3rdactive with this links in video/twitch description or project credits: 
+twitch.tv/3rdactive and youtube.com/channel/UCBL9sUCP0xQhB7rhl5bG39w
+• you wont monetizing the preset textures
+• you wont distribute the project files, but the github page
+
+there is a video manual in this folder.

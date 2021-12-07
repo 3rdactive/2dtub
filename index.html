@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>audio_viz_0</title>
+	<script src="http://localhost:3003" type="text/javascript" ></script>
+
+	<style>
+		body {
+			margin:0;
+			padding:0;
+			overflow: hidden;
+		}
+		canvas {
+			margin:auto;
+		}
+	</style>
+</head>
+<body style="background-color: rgba(0, 0, 0, 0); margin: 0px auto; overflow: hidden">
+	
+	<img style="margin-left: auto; margin-right: auto;  display: block;" src="http://localhost:4000" id="img">
+	<img style="margin-left: auto; margin-right: auto;  display: block; position: relative;
+	top: -425px;
+	left: 0px;" src="http://localhost:4005" id="eye">
+  <div id="div1"></div>
+	<script>
+		var localyeyes = -450
+var smoothing = 10;
+webgazer.setGazeListener(function(data, elapsedTime) {
+	if(document.getElementById("webgazerGazeDot")==null||document.getElementById("webgazerGazeDot")==undefined){
+
+}
+else{
+	document.getElementById("webgazerGazeDot").remove();
+}
+
+if(document.getElementById("webgazerVideoContainer")==null||document.getElementById("webgazerVideoContainer")==undefined){
+
+}
+else{
+	document.getElementById("webgazerVideoContainer").style.left="-1000px";
+}
+
+
+
+
+  if (data == null) {
+      return;
+  }
+  var xprediction = data.x; //these x coordinates are relative to the viewport
+  var yprediction = data.y; //these y coordinates are relative to the viewport
+  console.log("x = " +xprediction + " | y = " + localyeyes+yprediction);
+  document.getElementById("eye").style.top=( Math.round( ( parseInt(localyeyes)+parseInt(yprediction)/10 )/smoothing )*smoothing ).toString()+"px";
+  document.getElementById("eye").style.left=( Math.round( ( (parseInt(xprediction)-800)/10 )/smoothing )*smoothing ).toString()+"px";
+  //document.getElementById("eye").style.top=yprediction.toString()+"px";
+  //console.log("x = " +xprediction + " | y = " + yprediction); //elapsed time is based on time since begin was called
+}).begin();
+
+
+
+
+navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+.then(function(stream) {
+  audioContext = new AudioContext();
+  analyser = audioContext.createAnalyser();
+  microphone = audioContext.createMediaStreamSource(stream);
+  javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+  analyser.smoothingTimeConstant = 0.8;
+  analyser.fftSize = 1024;
+
+  microphone.connect(analyser);
+  analyser.connect(javascriptNode);
+  javascriptNode.connect(audioContext.destination);
+  javascriptNode.onaudioprocess = function() {
+      var array = new Uint8Array(analyser.frequencyBinCount);
+      analyser.getByteFrequencyData(array);
+      var values = 0;
+
+      var length = array.length;
+      for (var i = 0; i < length; i++) {
+        values += (array[i]);
+      }
+
+      var average = values / length;
+    
+    if(average>24.5&&average<115){
+		localyeyes=-525;
+      document.getElementById("img").src="http://localhost:4004/";
+      //console.log(average);
+    }
+    else if(average>115){
+		localyeyes=-575;
+      document.getElementById("img").src="http://localhost:4002/";
+      console.log(average);
+    }
+    else{
+		localyeyes=-475;
+      document.getElementById("img").src="http://localhost:4000/";
+    }
+    
+    // colorPids(average);
+  }
+  })
+  .catch(function(err) {
+});
+  
+	</script>
+  
+
+</body>
+
+</html>
